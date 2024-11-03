@@ -1,5 +1,6 @@
 import { GridType } from 'angular-gridster2';
 import { Device, DeviceType, Tag } from './device';
+import { WidgetPropertyVariable } from '../_helpers/svg-utils';
 
 export class Hmi {
     /** Layout for navigation menu, header bar, ...  */
@@ -61,6 +62,8 @@ export class LayoutSettings {
     loginoverlaycolor?: LoginOverlayColorType = LoginOverlayColorType.none;
     /** Show connection error toast */
     show_connection_error? = true;
+    /** Customs Css Styles */
+    customStyles = '';
 }
 
 export class NavigationSettings {
@@ -204,6 +207,13 @@ export class GaugeProperty {
     text: string;               // Text property (used by button)
 }
 
+export class WidgetProperty extends GaugeProperty {
+    type: string;
+    scriptContent?: { moduleId: string, content: string };
+    svgContent?: string;
+    varsToBind?: { [key: string]: WidgetPropertyVariable } = {};
+}
+
 export interface InputOptionsProperty {
     updated: boolean;
     numeric?: boolean;
@@ -212,6 +222,8 @@ export interface InputOptionsProperty {
     type?: InputOptionType;
     timeformat?: InputTimeFormatType;
     convertion?: InputConvertionType;
+    updatedEsc?: boolean;
+    selectOnClick?: boolean;
 }
 
 export enum InputOptionType {
@@ -317,6 +329,8 @@ export enum GaugeEventType {
     click = 'shapes.event-click',
     mousedown = 'shapes.event-mousedown',
     mouseup = 'shapes.event-mouseup',
+    mouseover = 'shapes.event-mouseover',
+    mouseout = 'shapes.event-mouseout',
     enter = 'shapes.event-enter',
     select = 'shapes.event-select',
     onLoad = 'shapes.event-onLoad',
@@ -335,6 +349,11 @@ export enum GaugeEventActionType {
     onRunScript = 'shapes.event-onrunscript',
     onViewToPanel = 'shapes.event-onViewToPanel',
     onMonitor = 'shapes.event-onmonitor',
+}
+
+export enum GaugeEventRelativeFromType {
+    window = 'window',
+    mouse = 'mouse'
 }
 
 export enum GaugeEventSetValueType {
@@ -393,6 +412,8 @@ export interface GaugeTableProperty {
 export enum TableType {
     data = 'data',
     history = 'history',
+    alarms = 'alarms',
+    alarmsHistory = 'alarmsHistory',
 }
 
 export interface TableOptions {
@@ -426,8 +447,16 @@ export interface TableOptions {
         color?: string;
         background?: string;
     };
-    columns: TableColumn[];
-    rows: TableRow[];
+    columns?: TableColumn[];
+    alarmsColumns?: TableColumn[];
+    alarmFilter: TableFilter;
+    rows?: TableRow[];
+}
+
+export interface TableFilter {
+    filterA: string[];
+    filterB: string[];
+    filterC: string[];
 }
 
 export enum TableCellType {
@@ -525,8 +554,9 @@ export class Event {
     dom: any;
     value: any = null;
     dbg = '';
-    type: string;
+    type?: string;
     ga: GaugeSettings;
+    variableId: string;
 }
 
 export class DaqQuery {

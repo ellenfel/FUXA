@@ -95,6 +95,8 @@ export class Tag {
     sysType: TagSystemType;
     /** Description */
     description?: string;
+    /** Deadband to set changed value */
+    deadband?: TagDeadband;
 
     constructor(_id: string) {
         this.id = _id;
@@ -142,6 +144,15 @@ export class TagDaq {
     }
 }
 
+export interface TagDeadband {
+    value: number;
+    mode: TagDeadbandModeType;
+}
+
+export enum TagDeadbandModeType {
+    absolute = 'absolute'
+}
+
 export class DeviceNetProperty {
     /** Device address (IP) */
     address: string;
@@ -171,6 +182,8 @@ export class DeviceNetProperty {
     connectionOption: string;
     /** Delay used for Modbus RTU/TCP delay between frame*/
     delay: number = 10;
+    /** Modbus TCP socket reuse flag */
+    socketReuse?: string;
 
     static descriptor = {
         address: 'Device address (IP)',
@@ -253,6 +266,24 @@ export enum ModbusTagType {
     // String = 'String'
 }
 
+export enum OpcUaTagType {
+    Boolean = 'Boolean',
+    SByte = 'SByte',
+    Byte = 'Byte',
+    Int16 = 'Int16',
+    UInt16 = 'UInt16',
+    Int32 = 'Int32',
+    UInt32 = 'UInt32',
+    Int64 = 'Int64',
+    UInt64 = 'UInt64',
+    Float = 'Float',
+    Double = 'Double',
+    String = 'String',
+    DateTime = 'DateTime',
+    Guid = 'Guid',
+    ByteString = 'ByteString'
+}
+
 export enum ModbusOptionType {
     SerialPort = 'SerialPort',
     RTUBufferedPort = 'RTUBufferedPort',
@@ -261,6 +292,11 @@ export enum ModbusOptionType {
     UdpPort = 'UdpPort',
     TcpRTUBufferedPort = 'TcpRTUBufferedPort',
     TelnetPort = 'TelnetPort'
+}
+
+export enum ModbusReuseModeType {
+    Reuse = 'Reuse',
+    ReuseSerial = 'ReuseSerial',
 }
 
 export enum MessageSecurityMode {

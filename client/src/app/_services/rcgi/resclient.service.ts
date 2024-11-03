@@ -5,13 +5,14 @@ import { Observable } from 'rxjs';
 
 import { ProjectData, ProjectDataCmdType, UploadFile } from '../../_models/project';
 import { ResourceStorageService } from './resource-storage.service';
-import { AlarmQuery } from '../../_models/alarm';
+import { AlarmBaseType, AlarmQuery, AlarmsFilter } from '../../_models/alarm';
 import { DaqQuery } from '../../_models/hmi';
 import { CommanType } from '../command.service';
 
 @Injectable()
 export class ResClientService implements ResourceStorageService {
 
+    endPointConfig = '';
     bridge: any = null;
     id: string = null;
     get isReady() { return (this.bridge) ? true : false; }
@@ -128,13 +129,13 @@ export class ResClientService implements ResourceStorageService {
         });
     }
 
-    getAlarmsValues(): Observable<any> {
+    getAlarmsValues(alarmFilter?: AlarmsFilter): Observable<AlarmBaseType[]> {
         return new Observable((observer) => {
             observer.error('Not supported!');
         });
     }
 
-    getAlarmsHistory(query: AlarmQuery): Observable<any> {
+    getAlarmsHistory(query: AlarmQuery): Observable<AlarmBaseType[]> {
         return new Observable((observer) => {
             observer.error('Not supported!');
         });

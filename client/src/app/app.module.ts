@@ -31,7 +31,7 @@ import { PluginsComponent } from './editor/plugins/plugins.component';
 import { AppSettingsComponent } from './editor/app-settings/app-settings.component';
 import { SetupComponent } from './editor/setup/setup.component';
 import { ChartConfigComponent, DialogChartLine } from './editor/chart-config/chart-config.component';
-import { GraphConfigComponent, DialogGraphSource } from './editor/graph-config/graph-config.component';
+import { GraphConfigComponent } from './editor/graph-config/graph-config.component';
 import { CardConfigComponent } from './editor/card-config/card-config.component';
 import { AlarmViewComponent } from './alarms/alarm-view/alarm-view.component';
 import { AlarmListComponent } from './alarms/alarm-list/alarm-list.component';
@@ -146,7 +146,7 @@ import { GraphBaseComponent } from './gauges/controls/html-graph/graph-base/grap
 import { NgChartsModule } from 'ng2-charts';
 import { IframePropertyComponent } from './gauges/controls/html-iframe/iframe-property/iframe-property.component';
 import { TablePropertyComponent } from './gauges/controls/html-table/table-property/table-property.component';
-import { TableCustomizerComponent, DialogTableCell } from './gauges/controls/html-table/table-customizer/table-customizer.component';
+import { TableCustomizerComponent } from './gauges/controls/html-table/table-customizer/table-customizer.component';
 import { DataTableComponent } from './gauges/controls/html-table/data-table/data-table.component';
 import { ReportListComponent } from './reports/report-list/report-list.component';
 import { ReportEditorComponent } from './reports/report-editor/report-editor.component';
@@ -189,15 +189,21 @@ import { TagPropertyEditEthernetipComponent } from './device/tag-property/tag-pr
 import { ViewPropertyComponent } from './editor/view-property/view-property.component';
 import { ResizeDirective } from './_directives/resize.directive';
 import { EditorViewsListComponent } from './editor/editor-views-list/editor-views-list.component';
+import { SvgUtils } from './_helpers/svg-utils';
+import { FlexWidgetPropertyComponent } from './gauges/gauge-property/flex-widget-property/flex-widget-property.component';
+import { GraphSourceEditComponent } from './editor/graph-config/graph-source-edit/graph-source-edit.component';
+import { LibWidgetsComponent } from './resources/lib-widgets/lib-widgets.component';
+import { TableCustomizerCellEditComponent } from './gauges/controls/html-table/table-customizer/table-customizer-cell-edit/table-customizer-cell-edit.component';
+import { TableAlarmsComponent } from './gauges/controls/html-table/table-alarms/table-alarms.component';
 
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
-    showDelay: 1750,
-    hideDelay: 1000,
-    touchendHideDelay: 1000,
+    showDelay: 2000,
+    hideDelay: 500,
+    touchendHideDelay: 500,
 };
 
 @NgModule({
@@ -273,6 +279,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
         FlexVariableComponent,
         FlexVariablesMappingComponent,
         FlexVariableMapComponent,
+        FlexWidgetPropertyComponent,
         ValueComponent,
         DialogDraggableDirective,
         EnumToArrayPipe,
@@ -310,7 +317,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
         NgxNouisliderComponent,
         NgxSchedulerComponent,
         DialogChartLine,
-        DialogGraphSource,
+        GraphSourceEditComponent,
         UsersComponent,
         UserEditComponent,
         LoginComponent,
@@ -327,10 +334,12 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
         IframePropertyComponent,
         TablePropertyComponent,
         TableCustomizerComponent,
-        DialogTableCell,
+        TableCustomizerCellEditComponent,
+        TableAlarmsComponent,
         DataTableComponent,
         RangeNumberComponent,
         LibImagesComponent,
+        LibWidgetsComponent,
         ReportItemTextComponent,
         ReportItemTableComponent,
         ReportItemAlarmsComponent,
@@ -395,6 +404,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
         GaugesManager,
         WindowRef,
         Utils,
+        SvgUtils,
         Calc,
         HtmlSwitchComponent,
         PipeComponent,

@@ -74,6 +74,7 @@ export class AlarmAction extends AlarmSubRange {
     type: AlarmActionsType;
     actparam: any;
     variableId: any;
+    actoptions = {};
 }
 
 export enum AlarmAckMode {
@@ -98,7 +99,31 @@ export class AlarmQuery {
     end: Date;
 }
 
-export interface IAlarmHistory {
+export enum AlarmColumnsType {
+    ontime = 'ontime',
+    text = 'text',
+    type =  'type',
+    group = 'group',
+    status = 'status',
+    ack = 'ack',
+    history = 'history'
+}
+export const AlarmColumns: string[] = Object.values(AlarmColumnsType);
+
+export enum AlarmHistoryColumnsType {
+    ontime = 'ontime',
+    text = 'text',
+    type = 'type',
+    group = 'group',
+    status = 'status',
+    offtime = 'offtime',
+    acktime = 'acktime',
+    userack = 'userack',
+    history = 'history'
+}
+export const AlarmHistoryColumns: string[] = Object.values(AlarmHistoryColumnsType);
+
+export interface AlarmBaseType {
     type: string;
     name: string;
     status: string;
@@ -107,15 +132,17 @@ export interface IAlarmHistory {
     offtime: number;
     acktime: number;
     userack: number;
-    group: number;
+    group: string;
     bkcolor: string;
     color: string;
+    toack: boolean;
 }
 
 export enum AlarmActionsType {
     popup = 'alarm.action-popup',
     setView = 'alarm.action-onsetview',
     setValue = 'alarm.action-onsetvalue',
+    runScript = 'alarm.action-onRunScript',
     // sendMsg = 'alarm.action-onsendmsg',
 }
 
@@ -141,4 +168,11 @@ export enum AlarmPriorityType {
     high = 'alarm.property-high',
     low = 'alarm.property-low',
     info = 'alarm.property-info'
+}
+
+export interface AlarmsFilter {
+    priority: string[],
+    text: string;
+    group: string;
+    tagIds: string[];
 }

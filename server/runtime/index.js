@@ -26,6 +26,8 @@ var notificatorMgr;
 var scriptsMgr;
 var jobsMgr;
 var tagsSubscription = new Map();
+var socketPool = new Map();
+var socketMutex = new Map();
 
 function init(_io, _api, _settings, _log, eventsMain) {
     io = _io;
@@ -80,7 +82,7 @@ function init(_io, _api, _settings, _log, eventsMain) {
     events.on('script-console', scriptConsoleOutput);
 
     io.on('connection', async (socket) => {
-        logger.info(`socket.io client connected`);        
+        logger.info(`socket.io client connected`);
         socket.tagsClientSubscriptions = [];
         // check authorizations
         if (settings.secureEnabled && !settings.secureOnlyEditor) {
@@ -143,7 +145,6 @@ function init(_io, _api, _settings, _log, eventsMain) {
                     }
                 } else if (message.cmd === 'set' && message.var) {
                     devices.setDeviceValue(message.var.source, message.var.id, message.var.value, message.fnc);
-                    // logger.info(`${Events.IoEventTypes.DEVICE_VALUES}: ${message.var.source} ${message.var.id} = ${message.var.value}`);
                 }
             } catch (err) {
                 logger.error(`${Events.IoEventTypes.DEVICE_VALUES}: ${err}`);
@@ -154,7 +155,7 @@ function init(_io, _api, _settings, _log, eventsMain) {
             try {
                 if (message) {
                     if (message.device) {
-                        devices.browseDevice(message.device, message.node, function (nodes) { 
+                        devices.browseDevice(message.device, message.node, function (nodes) {
                             io.emit(Events.IoEventTypes.DEVICE_BROWSE, nodes);
                         }).then(result => {
                             message.result = result;
@@ -346,7 +347,7 @@ function start() {
             }).catch(function (err) {
                 logger.error('runtime.failed-to-start-jobs: ' + err);
                 reject();
-            });            
+            });
         }).catch(function (err) {
             logger.error('runtime.failed-to-start: ' + err);
             reject();
@@ -375,7 +376,7 @@ function stop() {
         jobsMgr.stop().then(function () {
         }).catch(function (err) {
             logger.error('runtime.failed-to-stop-jobsMgr: ' + err);
-        });        
+        });
         resolve(true);
     });
 }
@@ -463,13 +464,13 @@ function updateDeviceValues(event) {
                 });
                 socket.emit(Events.IoEventTypes.DEVICE_VALUES, {
                     id: event.id,
-                    values: Object.values(tags)
+                    values: tagsToSend(tags)
                 });
             });
         } else {
-            io.emit(Events.IoEventTypes.DEVICE_VALUES, { 
+            io.emit(Events.IoEventTypes.DEVICE_VALUES, {
                 id: event.id,
-                values: Object.values(event.values) 
+                values: tagsToSend(event.values)
             });
         }
         tagsSubscription.forEach((key, value) => {
@@ -479,6 +480,14 @@ function updateDeviceValues(event) {
         });
     } catch (err) {
     }
+}
+
+function tagsToSend(tags) {
+    return Object.values(tags).map(tag => ({
+        id: tag.id,
+        value: tag.value,
+        timestamp: tag.timestamp
+    }));
 }
 
 function subscriptionTagChange(tagid) {
@@ -518,7 +527,7 @@ function updateAlarmsStatus() {
 
 /**
  * Trasmit the scripts console output
- * @param {*} output 
+ * @param {*} output
  */
 function scriptConsoleOutput(output) {
     try {
@@ -560,4 +569,6 @@ var runtime = module.exports = {
     get jobsMgr() { return jobsMgr },
     events: events,
     scriptSendCommand: scriptSendCommand,
+    get socketPool() { return socketPool },
+    get socketMutex() {return socketMutex }
 }

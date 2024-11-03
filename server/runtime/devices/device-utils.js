@@ -19,8 +19,8 @@ module.exports = {
         return false;
     },
 
-    tagValueCompose: async function (value, tag, runtime = undefined) {
-        var obj = {value: null };     
+    tagValueCompose: async function (value, oldValue, tag, runtime = undefined) {
+        var obj = {value: null };
         if (tag) {
             try {
                 if (tag.scaleReadFunction) {
@@ -28,6 +28,11 @@ module.exports = {
                 }
                 if (utils.isNumber(value, obj)) {
                     value = obj.value;
+                    if (tag.deadband && tag.deadband.value && !utils.isNullOrUndefined(oldValue)) {
+                        if (Math.abs(value - oldValue) <= tag.deadband.value) {
+                            value = oldValue;
+                        }
+                    }
                     if (tag.scale) {
                         if (tag.scale.mode === 'linear') {
                             value = (tag.scale.scaledHigh - tag.scale.scaledLow) * (value - tag.scale.rawLow) / (tag.scale.rawHigh - tag.scale.rawLow) + tag.scale.scaledLow;
@@ -41,7 +46,7 @@ module.exports = {
                         value = +value.toFixed(tag.format);
                     }
                 }
-            } catch (err) { 
+            } catch (err) {
                 console.error(err);
             }
         }
@@ -50,7 +55,7 @@ module.exports = {
 
     tagRawCalculator: async function (value, tag, runtime = undefined) {
         var obj = {value: null };
-        
+
         if (tag) {
             try {
                 if (utils.isNumber(value, obj)) {
@@ -115,7 +120,7 @@ const callScaleScript = async (scriptId, params, runtime, isRead, value) => {
             try {
                 tagParams = JSON.parse(params);
             } catch (error) {
-                runtime.logger.error(`'${tag.name}' error decoding ${isRead ? 'read' : 'write' } scale script params ${error.toString()}`);
+                runtime.logger.error(`'${params}' error decoding ${isRead ? 'read' : 'write' } scale script params ${error.toString()}`);
             }
             parameters = [...parameters, ...tagParams];
         }
@@ -128,7 +133,7 @@ const callScaleScript = async (scriptId, params, runtime, isRead, value) => {
         try {
             value = await runtime.scriptsMgr.runScript(script);
         } catch (error) {
-            runtime.logger.error(`'${tag.name}' ${isRead ? 'read' : 'write'} script error! ${error.toString()}`);
+            runtime.logger.error(`'${params}' ${isRead ? 'read' : 'write'} script error! ${error.toString()}`);
         }
         return value;
     }

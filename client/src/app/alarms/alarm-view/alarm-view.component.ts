@@ -7,7 +7,7 @@ import { takeUntil, switchMap, catchError, delay } from 'rxjs/operators';
 
 import { HmiService } from '../../_services/hmi.service';
 import { TranslateService } from '@ngx-translate/core';
-import { AlarmPriorityType, AlarmQuery, AlarmStatusType } from '../../_models/alarm';
+import { AlarmColumns, AlarmHistoryColumns, AlarmPriorityType, AlarmQuery, AlarmStatusType } from '../../_models/alarm';
 import { FormControl, FormGroup } from '@angular/forms';
 
 import * as moment from 'moment';
@@ -21,9 +21,9 @@ import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 })
 export class AlarmViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    alarmsColumns = ['ontime', 'text', 'type', 'group', 'status', 'ack', 'history'];
-    historyColumns = ['ontime', 'text', 'type', 'group', 'status', 'offtime', 'acktime', 'userack', 'history'];
-    displayColumns = this.alarmsColumns;
+    alarmsColumns = AlarmColumns;
+    historyColumns = AlarmHistoryColumns;
+    displayColumns: string[] = AlarmColumns;
 
     showheader = false;
     currentShowMode = 'collapse';
@@ -168,6 +168,7 @@ export class AlarmViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onClose() {
+        this.onShowAlarms();
         this.currentShowMode = 'collapse';
         this.showMode.emit('close');
         this.stopAskAlarmsValues();
@@ -183,10 +184,10 @@ export class AlarmViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showType = AlarmShowType.history;
         this.displayColumns = this.historyColumns;
         let query: AlarmQuery = <AlarmQuery>{
-            start: new Date(this.dateRange.value.startDate),
-            end: new Date(this.dateRange.value.endDate)
+            start: new Date(new Date(this.dateRange.value.startDate).setHours(0, 0, 0, 0)),
+            end: new Date(new Date(this.dateRange.value.endDate).setHours(23, 59, 59, 999))
         };
-		this.alarmsLoading = true;
+        this.alarmsLoading = true;
         this.hmiService.getAlarmsHistory(query).pipe(
             delay(1000)
         ).subscribe(result => {

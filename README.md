@@ -1,8 +1,8 @@
-![fuxa logo](/client/src/favicon.ico) 
+![fuxa logo](/client/src/favicon.ico)
 # FUXA
 FUXA is a web-based Process Visualization (SCADA/HMI/Dashboard) software. With FUXA you can create modern process visualizations with individual designs for your machines and real-time data display.
 
-![fuxa editor](/screenshot/fuxa-editor.png) 
+![fuxa editor](/screenshot/fuxa-editor.png)
 
 ![fuxa ani](/screenshot/fuxa-ani.gif)
 
@@ -18,6 +18,13 @@ Here is a [live demo](https://frangoteam.github.io) example of FUXA editor.
 
 ## Installing and Running
 FUXA is developed with NodeJS (backend) and Angular (frontend).
+
+See the Wiki for more details about installing and getting started
+
+[Wiki](https://github.com/frangoteam/FUXA/wiki)
+
+[Wiki Installing/Building](https://github.com/frangoteam/FUXA/wiki/Installing-and-Running)
+
 
 ### Running from docker
 ```
@@ -35,9 +42,9 @@ docker compose up -d
 
 ### Install from [NPM](https://www.npmjs.com/package/@frangoteam/fuxa)
 
-You need to have installed [Node](https://nodejs.org/en/about/previous-releases) Version 14 || 16 || 18.
+You need to have installed [Node](https://nodejs.org/en/about/previous-releases) Version 18.
 
-**WARNING** In linux with nodejs Version 16 || 18 the installation could be a challenge.
+**WARNING** In linux with nodejs Version 18 the installation could be a challenge.
 If you don't intend communicate with Siemens PLCs via S7 (node-snap7 library) you can install from [NPM @frangoteam/fuxa-min](https://www.npmjs.com/package/@frangoteam/fuxa-min)
 
 ```
@@ -48,9 +55,9 @@ fuxa
 ### Install from source
 [Download the latest release](https://github.com/frangoteam/FUXA/releases) and unpack it
 
-You need to have installed [Node](https://nodejs.org/en/about/previous-releases) Version 14 || 16 || 18.
+You need to have installed [Node](https://nodejs.org/en/about/previous-releases) Version 18.
 
-**WARNING** In linux with nodejs Version 16 || 18 the installation could be a challenge.
+**WARNING** In linux with nodejs Version 18 the installation could be a challenge.
 If you don't intend communicate with Siemens PLCs via S7 you can remove the node-snap7 library from the server/package.json
 
 ```
@@ -60,6 +67,8 @@ npm start
 ```
 
 Open up a browser (better Chrome) and navigate to http://localhost:1881
+
+**Note** If you intend to use nodejs version 14, please remove odbc from the package.json dependencies. nodejs 14 may have compatibility issues with certain versions of odbc, which could lead to installation errors.
 
 ### Creating the Electron Application
 Electron is a framework for building cross-platform desktop applications using web technologies. An Electron application is standalone, meaning it can be run independently on your desktop without needing a web browser.
@@ -113,6 +122,8 @@ ng build --configuration=production
 Any contributions you make are greatly appreciated.
 If you identify any errors, or have an idea for an improvement, please open an [issue](/../../issues).
 But before filing a new issue, please look through already existing issues. Search open and closed issues first.
+
+Non-code contributions are also highly appreciated, such as improving the documentation or promoting FUXA on social media.
 
 ### Pull-Requests
 If you want to raise a pull-request with a new feature, or a refactoring of existing code please first open an issue explaining the problem.
